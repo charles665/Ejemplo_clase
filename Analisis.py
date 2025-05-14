@@ -4,14 +4,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-
+import io
 class DataAnalyzer:
     def __init__(self, df):
         self.df = df
 
     def summary(self):
-        print(self.df.info())
-        print(self.df.describe())
+        buffer = io.StringIO()
+        self.df.info(buf=buffer)
+        salida = buffer.getvalue()
+        salida_describe = self.df.describe().to_string()
+        salida += "\n\n" + salida_describe
+        return salida
+
     def missing_values(self):
         return self.df.isnull()
     def imprimir(self):
