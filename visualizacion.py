@@ -52,7 +52,7 @@ boton_summary.grid(row =0, column=0, padx=10, pady=10)
 boton_summary = tk.Button(ventana, text="Numerico", command= mostrar_matriz_correlacion )
 boton_summary.grid(row =0, column=1, padx=10, pady=10)
 
-boton_summary = tk.Button(ventana, text="Categorico", command= mostrar_categorico )
+boton_summary = tk.Button(ventana, text="Categorico", command= mostrar_categorico)
 boton_summary.grid(row =0, column=2, padx=10, pady=10)
 
 text_area = ScrolledText(ventana, width=70, height=30)
