@@ -41,8 +41,45 @@ def mostrar_categorico():
         if sel in cols:
             img = analizar.categorical_analisis_col(sel)
             mostrar_imagenes(img)
-        
-        
+
+def agregar_usuario():
+    # Crear una nueva ventana para el formulario
+    form_window = tk.Toplevel(ventana)
+    form_window.title("Agregar Usuario")
+    
+    entries = {}
+    columnas = analizar.df.columns.tolist()
+
+    # Crear una entrada por cada columna
+    for idx, col in enumerate(columnas):
+        tk.Label(form_window, text=col).grid(row=idx, column=0, padx=5, pady=5)
+        entry = tk.Entry(form_window)
+        entry.grid(row=idx, column=1, padx=5, pady=5)
+        entries[col] = entry
+
+    def guardar_usuario():
+        # Crear un diccionario con los datos ingresados
+        nuevo_usuario = {}
+        for col in columnas:
+            val = entries[col].get()
+            if col in analizar.numeric_cols:
+                try:
+                    val = float(val)  # Convertir a numérico si aplica
+                except ValueError:
+                    messagebox.showerror("Error", f"El valor de '{col}' debe ser numérico.")
+                    return
+            nuevo_usuario[col] = val
+
+        # Convertir a DataFrame y agregar al original
+        nuevo_df = pd.DataFrame([nuevo_usuario])
+        analizar.df = pd.concat([analizar.df, nuevo_df], ignore_index=True)
+        analizar.df.to_csv('adult.csv', index=False)  # Guardar al CSV original
+
+        messagebox.showinfo("Éxito", "Usuario agregado correctamente.")
+        form_window.destroy()
+
+    # Botón para guardar
+    tk.Button(form_window, text="Guardar", command=guardar_usuario).grid(row=len(columnas), column=0, columnspan=2, pady=10)
 ventana = tk.Tk()
 ventana.title("Análisis de Datos")
 
@@ -54,6 +91,9 @@ boton_summary.grid(row =0, column=1, padx=10, pady=10)
 
 boton_summary = tk.Button(ventana, text="Categorico", command= mostrar_categorico)
 boton_summary.grid(row =0, column=2, padx=10, pady=10)
+
+boton_agregar = tk.Button(ventana, text="Agregar Usuario", command=agregar_usuario)
+boton_agregar.grid(row=0, column=3, padx=10, pady=10)
 
 text_area = ScrolledText(ventana, width=70, height=30)
 text_area.grid(row = 1, column = 1)
